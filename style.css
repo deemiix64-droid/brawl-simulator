@@ -190,6 +190,20 @@ button:active { transform: scale(0.97); }
 .input-row input { flex: 1; margin: 0; }
 .input-row button { width: auto; padding: 8px 16px; margin: 0; }
 
+.admin-link {
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+    background: rgba(0,0,0,0.5);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 10px;
+    color: #888;
+    text-decoration: none;
+    z-index: 999;
+}
+.admin-link:hover { color: #ffaa44; }
+
 .audio-control {
     position: fixed;
     bottom: 15px;
@@ -198,15 +212,7 @@ button:active { transform: scale(0.97); }
     border-radius: 50px;
     z-index: 1000;
 }
-
-.audio-control button {
-    width: auto;
-    padding: 10px 12px;
-    margin: 0;
-    background: none;
-    color: white;
-    font-size: 1.2rem;
-}
+.audio-control button { width: auto; padding: 10px 12px; margin: 0; background: none; color: white; font-size: 1.2rem; }
 
 .footer { text-align: center; font-size: 0.65rem; opacity: 0.7; margin-top: 20px; }
 
