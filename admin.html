@@ -4,7 +4,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Admin Panel | CoolBox</title>
-    <link rel="stylesheet" href="admin-style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            padding: 15px;
+            min-height: 100vh;
+        }
+
+        .admin-container { max-width: 800px; margin: 0 auto; }
+
+        .admin-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .admin-header h1 { font-size: 1.3rem; }
+
+        .admin-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .admin-card h2 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            border-left: 3px solid #ffaa44;
+            padding-left: 12px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        .stat-card {
+            background: rgba(0,0,0,0.3);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-value { font-size: 1.5rem; font-weight: bold; color: #ffaa44; }
+
+        .button-group { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        input:focus { outline: none; border-color: #ffaa44; }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:active { transform: scale(0.97); }
+
+        .btn-primary { background: #3b82f6; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-royal { background: linear-gradient(135deg, #f093fb, #f5576c); color: white; }
+        .btn-secondary { background: #6b7280; color: white; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .checkbox-group { display: flex; gap: 15px; margin: 10px 0; flex-wrap: wrap; }
+        .checkbox-group label { display: flex; align-items: center; gap: 5px; cursor: pointer; }
+
+        .players-list { max-height: 300px; overflow-y: auto; }
+        .player-item {
+            background: rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .player-item:hover { background: rgba(255,170,68,0.3); }
+        .player-tag { font-family: monospace; font-size: 0.7rem; opacity: 0.7; margin-top: 4px; }
+
+        .search-result {
+            background: rgba(0,0,0,0.4);
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 10px;
+            display: none;
+        }
+        .search-result.show { display: block; }
+
+        .back-btn {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.6);
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .tag-example {
+            font-size: 0.7rem;
+            color: #aaa;
+            margin-top: -8px;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+            .button-group button { flex: 1; }
+        }
+    </style>
 </head>
 <body>
 <div class="admin-container">
@@ -13,6 +156,7 @@
         <button id="logoutBtn" class="btn-danger">🚪 Выйти</button>
     </div>
     
+    <!-- Статус сервера -->
     <div class="admin-card">
         <h2>🖥️ Статус сервера</h2>
         <div class="stats-grid">
@@ -26,25 +170,29 @@
         </div>
     </div>
     
+    <!-- Поиск игрока -->
     <div class="admin-card">
         <h2>🔍 Поиск игрока по тегу</h2>
-        <input type="text" id="searchTag" placeholder="#A1B23CD4" maxlength="9">
-        <button id="searchBtn" class="btn-primary">Найти</button>
+        <input type="text" id="searchTag" placeholder="Например: #A1B23CD4" maxlength="9">
+        <div class="tag-example">📌 Формат тега: # + 8 символов (цифры и буквы)</div>
+        <button id="searchBtn" class="btn-primary">🔍 Найти игрока</button>
         <div id="searchResult" class="search-result"></div>
     </div>
     
+    <!-- Выдача ресурсов -->
     <div class="admin-card">
-        <h2>💰 Выдать ресурсы</h2>
-        <input type="text" id="giveTag" placeholder="Тег игрока (#A1B23CD4)">
+        <h2>💰 Выдать ресурсы игроку</h2>
+        <input type="text" id="giveTag" placeholder="Тег игрока (например: #A1B23CD4)">
         <div class="form-row">
-            <input type="number" id="giveCoins" placeholder="💰 Монеты">
-            <input type="number" id="giveGems" placeholder="💎 Гемы">
-            <input type="number" id="giveStarDrops" placeholder="✨ Стардропы">
-            <input type="number" id="giveTrophies" placeholder="🏆 Трофеи">
+            <input type="number" id="giveCoins" placeholder="💰 Монеты" value="0">
+            <input type="number" id="giveGems" placeholder="💎 Гемы" value="0">
+            <input type="number" id="giveStarDrops" placeholder="✨ Стардропы" value="0">
+            <input type="number" id="giveTrophies" placeholder="🏆 Трофеи" value="0">
         </div>
         <button id="giveResourcesBtn" class="btn-success">💎 Выдать ресурсы</button>
     </div>
     
+    <!-- Выдать бойца -->
     <div class="admin-card">
         <h2>🎭 Выдать бойца</h2>
         <input type="text" id="brawlerTag" placeholder="Тег игрока">
@@ -52,6 +200,7 @@
         <button id="giveBrawlerBtn" class="btn-success">🎭 Выдать бойца</button>
     </div>
     
+    <!-- Контент креатора -->
     <div class="admin-card">
         <h2>👑 Контент креатора</h2>
         <input type="text" id="creatorTag" placeholder="Тег игрока">
@@ -64,17 +213,19 @@
             <option value="5000">5000 монет</option>
             <option value="10000">10000 монет</option>
             <option value="20000">20000 монет + 50 гемов</option>
-            <option value="50000">50000 монет + 100 гемов</option>
+            <option value="50000">50000 монет + 100 гемов + легендарный</option>
         </select>
         <button id="giveCreatorBtn" class="btn-royal">👑 Выдать контент креатора</button>
     </div>
     
+    <!-- Список всех игроков -->
     <div class="admin-card">
         <h2>📋 Все игроки</h2>
         <input type="text" id="filterPlayers" placeholder="Фильтр по имени или тегу">
         <div class="players-list" id="playersList"></div>
     </div>
     
+    <!-- Глобальное сообщение -->
     <div class="admin-card">
         <h2>📢 Глобальное сообщение</h2>
         <input type="text" id="globalMessage" placeholder="Сообщение для всех игроков">
@@ -84,6 +235,358 @@
 
 <a href="index.html" class="back-btn">← В игру</a>
 
-<script src="admin.js"></script>
+<script>
+// ==================== АДМИН-ПАНЕЛЬ ====================
+const ADMIN_PASSWORD = 'coolbox2025';
+let serverStartTime = Date.now();
+
+// Проверка авторизации
+function checkAuth() {
+    const auth = sessionStorage.getItem('admin_auth');
+    if (auth === ADMIN_PASSWORD) {
+        initAdmin();
+    } else {
+        const password = prompt('Введите пароль администратора:');
+        if (password === ADMIN_PASSWORD) {
+            sessionStorage.setItem('admin_auth', password);
+            initAdmin();
+        } else {
+            alert('Неверный пароль!');
+            window.location.href = 'index.html';
+        }
+    }
+}
+
+// Инициализация
+function initAdmin() {
+    loadStats();
+    loadPlayers();
+    loadBrawlersSelect();
+    
+    setInterval(loadStats, 5000);
+    setInterval(loadPlayers, 10000);
+    
+    document.getElementById('searchBtn').onclick = searchPlayer;
+    document.getElementById('giveResourcesBtn').onclick = giveResources;
+    document.getElementById('giveBrawlerBtn').onclick = giveBrawler;
+    document.getElementById('giveCreatorBtn').onclick = giveCreatorContent;
+    document.getElementById('sendMessageBtn').onclick = sendGlobalMessage;
+    document.getElementById('restartBtn').onclick = restartServer;
+    document.getElementById('clearCacheBtn').onclick = clearCache;
+    document.getElementById('logoutBtn').onclick = logout;
+    document.getElementById('filterPlayers').oninput = filterPlayers;
+    
+    // Поиск по Enter
+    document.getElementById('searchTag').onkeypress = (e) => { if(e.key === 'Enter') searchPlayer(); };
+    document.getElementById('giveTag').onkeypress = (e) => { if(e.key === 'Enter') giveResources(); };
+}
+
+// Загрузка статистики
+function loadStats() {
+    let players = [];
+    for(let i=0; i<localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if(key && key.startsWith("player_")) {
+            try { players.push(JSON.parse(localStorage.getItem(key))); } catch(e){}
+        }
+    }
+    document.getElementById('onlineCount').innerText = Math.min(players.length, 42);
+    document.getElementById('totalPlayers').innerText = players.length;
+    let uptime = Math.floor((Date.now() - serverStartTime) / 1000);
+    let hours = Math.floor(uptime / 3600);
+    let minutes = Math.floor((uptime % 3600) / 60);
+    document.getElementById('uptime').innerText = `${hours}ч ${minutes}м`;
+}
+
+// Загрузка списка игроков
+function loadPlayers() {
+    let players = [];
+    for(let i=0; i<localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if(key && key.startsWith("player_")) {
+            try {
+                let p = JSON.parse(localStorage.getItem(key));
+                players.push(p);
+            } catch(e){}
+        }
+    }
+    players.sort((a,b)=>b.trophies - a.trophies);
+    window.allPlayers = players;
+    filterPlayers();
+}
+
+function filterPlayers() {
+    let filter = document.getElementById('filterPlayers').value.toLowerCase();
+    let filtered = (window.allPlayers || []).filter(p => 
+        (p.name && p.name.toLowerCase().includes(filter)) || 
+        (p.tag && p.tag.toLowerCase().includes(filter))
+    ).slice(0, 30);
+    let container = document.getElementById('playersList');
+    if(filtered.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:20px;">Нет игроков</div>';
+        return;
+    }
+    container.innerHTML = filtered.map(p => `
+        <div class="player-item" onclick="selectPlayer('${p.tag}')">
+            <div>
+                <strong>${escapeHtml(p.name)}</strong>
+                <div class="player-tag">${p.tag}</div>
+            </div>
+            <div>🏆 ${p.trophies} | 💰 ${p.coins}</div>
+        </div>
+    `).join('');
+}
+
+function selectPlayer(tag) {
+    document.getElementById('searchTag').value = tag;
+    document.getElementById('giveTag').value = tag;
+    document.getElementById('brawlerTag').value = tag;
+    document.getElementById('creatorTag').value = tag;
+    searchPlayer();
+}
+
+// Поиск игрока
+function searchPlayer() {
+    let tag = document.getElementById('searchTag').value.trim().toUpperCase();
+    if(!tag) {
+        alert('Введите тег игрока!');
+        return;
+    }
+    
+    let player = null;
+    for(let i=0; i<localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if(key && key.startsWith("player_")) {
+            let p = JSON.parse(localStorage.getItem(key));
+            if(p.tag === tag) { player = p; break; }
+        }
+    }
+    
+    let resultDiv = document.getElementById('searchResult');
+    if(player) {
+        resultDiv.classList.add('show');
+        resultDiv.innerHTML = `
+            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px;">
+                <div><strong>Имя:</strong> ${escapeHtml(player.name)}</div>
+                <div><strong>Тег:</strong> ${player.tag}</div>
+                <div>🏆 Трофеи: ${player.trophies}</div>
+                <div>💰 Монеты: ${player.coins}</div>
+                <div>💎 Гемы: ${player.gems || 0}</div>
+                <div>✨ Стардропы: ${player.starDrops}</div>
+                <div>⭐ Победы: ${player.wins}</div>
+                <div>🎖️ Любимый боец: ${player.favBrawler}</div>
+                <div>👥 Друзей: ${player.friends ? player.friends.length : 0}</div>
+                <div>🏰 Клан: ${player.clan || 'нет'}</div>
+            </div>
+        `;
+    } else {
+        resultDiv.classList.add('show');
+        resultDiv.innerHTML = `<div style="color:#f87171; text-align:center;">❌ Игрок с тегом ${tag} не найден!</div>`;
+    }
+}
+
+// Выдача ресурсов
+function giveResources() {
+    let tag = document.getElementById('giveTag').value.trim().toUpperCase();
+    let coins = parseInt(document.getElementById('giveCoins').value) || 0;
+    let gems = parseInt(document.getElementById('giveGems').value) || 0;
+    let starDrops = parseInt(document.getElementById('giveStarDrops').value) || 0;
+    let trophies = parseInt(document.getElementById('giveTrophies').value) || 0;
+    
+    if(!tag) {
+        alert('Введите тег игрока!');
+        return;
+    }
+    
+    let player = null;
+    let playerKey = null;
+    for(let i=0; i<localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if(key && key.startsWith("player_")) {
+            let p = JSON.parse(localStorage.getItem(key));
+            if(p.tag === tag) { player = p; playerKey = key; break; }
+        }
+    }
+    
+    if(player) {
+        player.coins = (player.coins || 0) + coins;
+        player.gems = (player.gems || 0) + gems;
+        player.starDrops = (player.starDrops || 0) + starDrops;
+        player.trophies = (player.trophies || 0) + trophies;
+        localStorage.setItem(playerKey, JSON.stringify(player));
+        
+        let msg = `✅ Выдано игроку ${player.name}:\n`;
+        if(coins > 0) msg += `💰 +${coins} монет\n`;
+        if(gems > 0) msg += `💎 +${gems} гемов\n`;
+        if(starDrops > 0) msg += `✨ +${starDrops} стардропов\n`;
+        if(trophies > 0) msg += `🏆 +${trophies} трофеев`;
+        alert(msg);
+        
+        searchPlayer();
+        loadPlayers();
+        loadStats();
+        
+        // Очистка полей
+        document.getElementById('giveCoins').value = 0;
+        document.getElementById('giveGems').value = 0;
+        document.getElementById('giveStarDrops').value = 0;
+        document.getElementById('giveTrophies').value = 0;
+    } else {
+        alert(`❌ Игрок с тегом ${tag} не найден!`);
+    }
+}
+
+// Загрузка списка бойцов
+function loadBrawlersSelect() {
+    let brawlers = ["Shelly","Nita","Colt","Bull","Jessie","Brock","Dynamike","Bo","Tick","8-Bit",
+        "Emz","El Primo","Barley","Poco","Rosa","Rico","Darryl","Penny","Carl","Jacky",
+        "Spike","Crow","Leon","Sandy","Amber","Meg","Surge","Colette","Edgar","Byron",
+        "Gus","Bonnie","Janet","Fang","Eve","Otis","Sam","Mandy","Maisie","Cordelius"];
+    let select = document.getElementById('selectBrawler');
+    select.innerHTML = brawlers.map(b => `<option value="${b}">${b}</option>`).join('');
+}
+
+// Выдача бойца
+function giveBrawler() {
+    let tag = document.getElementById('brawlerTag').value.trim().toUpperCase();
+    let brawler = document.getElementById('selectBrawler').value;
+    
+    if(!tag) {
+        alert('Введите тег игрока!');
+        return;
+    }
+    
+    let player = null;
+    let playerKey = null;
+    for(let i=0; i<localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if(key && key.startsWith("player_")) {
+            let p = JSON.parse(localStorage.getItem(key));
+            if(p.tag === tag) { player = p; playerKey = key; break; }
+        }
+    }
+    
+    if(player) {
+        if(!player.brawlers) player.brawlers = [];
+        if(!player.brawlers.includes(brawler)) {
+            player.brawlers.push(brawler);
+            player.favBrawler = brawler;
+            localStorage.setItem(playerKey, JSON.stringify(player));
+            alert(`✅ Боец ${brawler} выдан игроку ${player.name}!`);
+            searchPlayer();
+        } else {
+            alert(`У игрока ${player.name} уже есть боец ${brawler}!`);
+        }
+    } else {
+        alert(`❌ Игрок с тегом ${tag} не найден!`);
+    }
+}
+
+// Контент креатора
+function giveCreatorContent() {
+    let tag = document.getElementById('creatorTag').value.trim().toUpperCase();
+    let creatorBadge = document.getElementById('creatorBadge').checked;
+    let vipBadge = document.getElementById('vipBadge').checked;
+    let legendaryBrawler = document.getElementById('legendaryBrawler').checked;
+    let bonus = parseInt(document.getElementById('creatorBonus').value);
+    
+    if(!tag) {
+        alert('Введите тег игрока!');
+        return;
+    }
+    
+    let player = null;
+    let playerKey = null;
+    for(let i=0; i<localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if(key && key.startsWith("player_")) {
+            let p = JSON.parse(localStorage.getItem(key));
+            if(p.tag === tag) { player = p; playerKey = key; break; }
+        }
+    }
+    
+    if(player) {
+        player.coins = (player.coins || 0) + bonus;
+        if(bonus >= 20000) player.gems = (player.gems || 0) + 50;
+        if(bonus >= 50000) player.gems = (player.gems || 0) + 100;
+        if(creatorBadge) player.creatorBadge = true;
+        if(vipBadge) player.vipBadge = true;
+        if(legendaryBrawler) {
+            let legendary = ['Spike', 'Crow', 'Leon', 'Sandy'];
+            if(!player.brawlers) player.brawlers = [];
+            legendary.forEach(b => { if(!player.brawlers.includes(b)) player.brawlers.push(b); });
+            player.favBrawler = legendary[0];
+        }
+        localStorage.setItem(playerKey, JSON.stringify(player));
+        
+        let msg = `👑 Контент креатора выдан ${player.name}!\n💰 +${bonus} монет`;
+        if(bonus >= 20000) msg += `\n💎 +50 гемов`;
+        if(creatorBadge) msg += `\n🏆 Знак креатора`;
+        if(vipBadge) msg += `\n💎 VIP статус`;
+        if(legendaryBrawler) msg += `\n⭐ Легендарные бойцы`;
+        alert(msg);
+        
+        searchPlayer();
+        loadPlayers();
+    } else {
+        alert(`❌ Игрок с тегом ${tag} не найден!`);
+    }
+}
+
+// Глобальное сообщение
+function sendGlobalMessage() {
+    let message = document.getElementById('globalMessage').value.trim();
+    if(message) {
+        alert(`📢 Сообщение отправлено всем игрокам: "${message}"`);
+        document.getElementById('globalMessage').value = '';
+    } else {
+        alert('Введите сообщение!');
+    }
+}
+
+// Перезапуск сервера
+function restartServer() {
+    if(confirm('Перезапустить сервер? Все онлайн-игроки будут отключены.')) {
+        alert('Сервер перезапущен!');
+        serverStartTime = Date.now();
+    }
+}
+
+// Очистка кэша
+function clearCache() {
+    if(confirm('Очистить кэш? ВСЕ ДАННЫЕ ИГРОКОВ БУДУТ УДАЛЕНЫ!')) {
+        let keysToRemove = [];
+        for(let i=0; i<localStorage.length; i++) {
+            let key = localStorage.key(i);
+            if(key && key.startsWith("player_")) {
+                keysToRemove.push(key);
+            }
+        }
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+        localStorage.removeItem('player_id');
+        alert('Кэш очищен! Все игроки удалены.');
+        location.reload();
+    }
+}
+
+// Выход
+function logout() {
+    sessionStorage.removeItem('admin_auth');
+    window.location.href = 'index.html';
+}
+
+// Экранирование HTML
+function escapeHtml(text) {
+    let div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Глобальная функция для выбора игрока
+window.selectPlayer = selectPlayer;
+
+// Запуск
+checkAuth();
+</script>
 </body>
 </html>
