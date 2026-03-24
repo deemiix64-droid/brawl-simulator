@@ -3,528 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#1a2a3a">
     <title>Brawl Stars Simulator | CoolBox</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #0a0f1a 0%, #0c1a1f 100%);
-            color: white;
-            min-height: 100vh;
-            padding: 15px;
-        }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            background: rgba(0,0,0,0.4);
-            padding: 12px 20px;
-            border-radius: 50px;
-            margin-bottom: 20px;
-        }
-        .logo h1 { font-size: 1.4rem; background: linear-gradient(135deg, #ffd966, #ff9966); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .player-tag { background: #000000aa; padding: 6px 12px; border-radius: 30px; font-family: monospace; font-size: 0.8rem; }
-        .telegram-btn { background: #27a1e5; border: none; padding: 8px 16px; border-radius: 40px; color: white; cursor: pointer; font-weight: bold; }
-        .promo {
-            background: linear-gradient(135deg, #ffb347, #ff7e05);
-            border-radius: 25px;
-            padding: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 #ffaa44aa; } 50% { box-shadow: 0 0 0 8px #ffaa4400; } }
-        .online-status { text-align: center; font-size: 0.8rem; margin-bottom: 15px; color: #4ade80; }
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .card {
-            background: rgba(30,40,35,0.85);
-            backdrop-filter: blur(10px);
-            border-radius: 25px;
-            padding: 18px;
-            border: 1px solid rgba(255,215,0,0.3);
-        }
-        .card h3 { border-left: 4px solid #ffaa44; padding-left: 12px; margin-bottom: 15px; }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 8px;
-            margin: 15px 0;
-            text-align: center;
-        }
-        .stat { background: rgba(0,0,0,0.3); padding: 8px; border-radius: 12px; }
-        .stat span:first-child { display: block; font-size: 1.2rem; }
-        .stat span:last-child { font-size: 0.9rem; font-weight: bold; color: #ffaa44; }
-        input {
-            background: #2d3e32;
-            border: none;
-            padding: 10px;
-            border-radius: 30px;
-            color: white;
-            width: 100%;
-            margin: 5px 0;
-        }
-        button {
-            background: #ffaa44;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 8px;
-        }
-        button:active { transform: scale(0.97); }
-        .fight-btn { background: #e25822; color: white; font-size: 1.1rem; padding: 14px; }
-        .fight-area {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        .fighter {
-            flex: 1;
-            background: #141e1a;
-            border-radius: 20px;
-            padding: 12px;
-            text-align: center;
-        }
-        .fighter span { font-size: 0.7rem; opacity: 0.7; }
-        .fighter div { font-size: 1rem; font-weight: bold; margin-top: 5px; }
-        .vs { font-size: 1.2rem; font-weight: bold; color: #ffaa44; display: flex; align-items: center; }
-        .fight-result {
-            background: rgba(0,0,0,0.5);
-            border-radius: 20px;
-            padding: 12px;
-            text-align: center;
-            margin: 15px 0;
-        }
-        .brawlers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            gap: 8px;
-            max-height: 280px;
-            overflow-y: auto;
-        }
-        .brawler-card {
-            background: #1e2a25;
-            border-radius: 15px;
-            text-align: center;
-            padding: 8px;
-            cursor: pointer;
-            border: 1px solid #5a6e5a;
-        }
-        .brawler-card.selected { background: #ffaa44; color: #1f2a1b; transform: scale(1.02); border-color: white; }
-        .brawler-icon { width: 45px; height: 45px; margin: 0 auto; background: #2a3a32; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-        .brawler-name { font-size: 0.65rem; margin-top: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .coolpass {
-            background: linear-gradient(135deg, #2c3e50, #1a2a3a);
-            border-radius: 20px;
-            padding: 12px;
-            margin: 15px 0;
-            border: 1px solid #ffaa44;
-        }
-        .coolpass-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .coolpass-bar { height: 8px; background: rgba(255,255,255,0.2); border-radius: 10px; overflow: hidden; }
-        .coolpass-fill { height: 100%; background: linear-gradient(90deg, #ffaa44, #ff6644); width: 0%; transition: width 0.3s; }
-        .codes { background: #0f1b14; border-radius: 20px; padding: 12px; margin-top: 10px; }
-        .leaderboard { list-style: none; max-height: 200px; overflow-y: auto; }
-        .leaderboard li { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #557755; }
-        .input-row { display: flex; gap: 8px; margin-top: 8px; }
-        .input-row input { flex: 1; margin: 0; }
-        .input-row button { width: auto; padding: 8px 16px; margin: 0; }
-        .admin-link {
-            position: fixed;
-            bottom: 15px;
-            left: 15px;
-            background: rgba(0,0,0,0.5);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 10px;
-            color: #888;
-            text-decoration: none;
-            z-index: 999;
-        }
-        .admin-link:hover { color: #ffaa44; }
-        .audio-control {
-            position: fixed;
-            bottom: 15px;
-            right: 15px;
-            background: rgba(0,0,0,0.6);
-            border-radius: 50px;
-            z-index: 1000;
-        }
-        .audio-control button { width: auto; padding: 10px 12px; margin: 0; background: none; color: white; font-size: 1.2rem; }
-        .footer { text-align: center; font-size: 0.65rem; opacity: 0.7; margin-top: 20px; }
-        .notification {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2ecc71;
-            padding: 10px 20px;
-            border-radius: 50px;
-            z-index: 10000;
-            animation: slideDown 0.3s;
-            white-space: nowrap;
-        }
-        @keyframes slideDown {
-            from { transform: translateX(-50%) translateY(-100px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
-        @media (max-width: 700px) { body { padding: 10px; } .stats-grid { grid-template-columns: repeat(3, 1fr); } }
-    </style>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <div class="logo"><h1>⚡ BRAWL SIM</h1><p>CoolBox by orbsi</p></div>
-        <div class="player-tag" id="playerTagDisplay">#NEW</div>
-        <button class="telegram-btn" id="telegramBtn">📱 TG</button>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-icon">⚡</div>
+            <h1>COOLBOX<br><span>by orbsi</span></h1>
+            <div class="loader"><div class="loader-bar" id="loaderBar"></div></div>
+            <p class="loading-status" id="loadingStatus">Загрузка...</p>
+        </div>
     </div>
-    
-    <div class="promo">
-        <span>🎁🔥 АКЦИЯ: +10 СТАРДРОПОВ 🔥🎁</span>
-        <span id="promoTimer">47:59:59</span>
-    </div>
-    
-    <div class="online-status">🟢 Онлайн: <span id="onlineCount">1</span> игроков</div>
-    
-    <div class="dashboard">
-        <div class="card">
-            <h3>🏆 МОЙ ПРОФИЛЬ</h3>
-            <input type="text" id="playerNameInput" placeholder="Ваше имя" maxlength="16">
-            <div class="stats-grid">
-                <div class="stat"><span>🏆</span><span id="trophiesCount">0</span></div>
-                <div class="stat"><span>⭐</span><span id="winsCount">0</span></div>
-                <div class="stat"><span>💰</span><span id="coinsCount">0</span></div>
-                <div class="stat"><span>💎</span><span id="gemsCount">0</span></div>
-                <div class="stat"><span>✨</span><span id="starDrops">0</span></div>
-            </div>
-            <div><span>🎖️ Любимый: </span><span id="favBrawler">Shelly</span></div>
-            <button id="saveProfileBtn">💾 Сохранить</button>
-            
-            <div class="coolpass">
-                <div class="coolpass-header"><span>⭐ COOLPASS</span><span id="coolpassLevel">Уровень 1</span></div>
-                <div class="coolpass-bar"><div class="coolpass-fill" id="coolpassFill"></div></div>
-                <div id="coolpassRewards" style="font-size:0.7rem; margin-top:8px;"></div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <div class="header">
+                <div class="logo"><h1>⚡ BRAWL SIM</h1><p>CoolBox by orbsi</p></div>
+                <div class="player-tag" id="playerTagDisplay">#LOADING</div>
+                <button class="telegram-btn" id="telegramBtn">📱 TG</button>
             </div>
             
-            <div class="codes">
-                <h4>🎁 КОДЫ АВТОРА</h4>
-                <input type="text" id="codeInput" placeholder="COOLBOX / ORBSI2025">
-                <button id="redeemBtn">Активировать</button>
-                <div style="font-size:10px; margin-top:5px;">✨ COOLBOX → 1000 монет | ORBSI2025 → 2000 монет + 50 гемов</div>
+            <div class="promo">
+                <span>🎁 АКЦИЯ: 10 СТАРДРОПОВ 🎁</span>
+                <span id="promoTimer">47:59:59</span>
             </div>
-        </div>
-        
-        <div class="card">
-            <h3>⚔️ СИМУЛЯЦИЯ БОЯ</h3>
-            <div class="fight-area">
-                <div class="fighter"><span>🤺 Мой боец</span><div id="myBrawler">Shelly</div></div>
-                <div class="vs">VS</div>
-                <div class="fighter"><span>👾 Противник</span><div id="enemyBrawler">?</div></div>
+            
+            <div class="online-status">🟢 Онлайн: <span id="onlineCount">0</span></div>
+            
+            <div class="dashboard">
+                <div class="card">
+                    <h3>🏆 ПРОФИЛЬ</h3>
+                    <input type="text" id="playerNameInput" placeholder="Имя">
+                    <div class="stats-grid">
+                        <div class="stat"><span>🏆</span><span id="trophiesCount">0</span></div>
+                        <div class="stat"><span>⭐</span><span id="winsCount">0</span></div>
+                        <div class="stat"><span>💰</span><span id="coinsCount">0</span></div>
+                        <div class="stat"><span>💎</span><span id="gemsCount">0</span></div>
+                        <div class="stat"><span>✨</span><span id="starDrops">0</span></div>
+                    </div>
+                    <div><span>🎖️ Любимый:</span> <span id="favBrawler">-</span></div>
+                    <button id="saveProfileBtn">💾 Сохранить</button>
+                    
+                    <div class="coolpass">
+                        <div class="coolpass-header"><span>⭐ COOLPASS</span><span id="coolpassLevel">Ур.1</span></div>
+                        <div class="coolpass-bar"><div class="coolpass-fill" id="coolpassFill"></div></div>
+                        <div id="coolpassRewards"></div>
+                    </div>
+                    
+                    <div class="codes">
+                        <h4>🎁 КОДЫ</h4>
+                        <input type="text" id="codeInput" placeholder="COOLBOX / ORBSI2025">
+                        <button id="redeemBtn">Активировать</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>⚔️ БОЙ</h3>
+                    <div class="fight-area">
+                        <div class="fighter"><span>🤺 Я</span><div id="myBrawler">-</div></div>
+                        <div class="vs">VS</div>
+                        <div class="fighter"><span>👾 Враг</span><div id="enemyBrawler">?</div></div>
+                    </div>
+                    <button class="fight-btn" id="fightBtn">💥 СРАЗИТЬСЯ</button>
+                    <div id="fightResult" class="fight-result"></div>
+                    <h3>📋 БОЙЦЫ (101)</h3>
+                    <div class="brawlers-grid" id="brawlersList"></div>
+                </div>
+                
+                <div class="card">
+                    <h3>🏅 ЛИДЕРЫ</h3>
+                    <ul class="leaderboard" id="leaderboardList"></ul>
+                    <div><h4>👥 ДРУЗЬЯ</h4><div id="friendsList">-</div>
+                    <div class="input-row"><input type="text" id="friendInput" placeholder="Тег"><button id="addFriendBtn">➕</button></div></div>
+                    <div><h4>🏰 КЛАН</h4><div id="clanDisplay">-</div>
+                    <div class="input-row"><input type="text" id="clanInput" placeholder="Название"><button id="createClanBtn">🏷️</button></div></div>
+                </div>
             </div>
-            <button class="fight-btn" id="fightBtn">💥 СРАЗИТЬСЯ 💥</button>
-            <div id="fightResult" class="fight-result">⚔️ Нажми на кнопку боя!</div>
-            <h3>📋 ВСЕ БОЙЦЫ (101)</h3>
-            <div class="brawlers-grid" id="brawlersList"></div>
-        </div>
-        
-        <div class="card">
-            <h3>🏅 ТАБЛИЦА ЛИДЕРОВ</h3>
-            <ul class="leaderboard" id="leaderboardList"><li>Загрузка...</li></ul>
-            <div style="margin-top:15px;"><h4>👥 ДРУЗЬЯ</h4><div id="friendsList">Нет друзей</div>
-            <div class="input-row"><input type="text" id="friendInput" placeholder="Тег друга"><button id="addFriendBtn">➕</button></div></div>
-            <div style="margin-top:15px;"><h4>🏰 КЛАН</h4><div id="clanDisplay">Нет клана</div>
-            <div class="input-row"><input type="text" id="clanInput" placeholder="Название клана"><button id="createClanBtn">🏷️</button></div></div>
+            
+            <div class="footer">⚠️ Фанатский проект | CoolBox by orbsi</div>
         </div>
     </div>
     
-    <div class="footer">⚠️ Фанатский проект, не связан с Supercell | CoolBox by orbsi</div>
-</div>
-
-<a href="admin.html" class="admin-link">⚙️ Admin Panel</a>
-<div class="audio-control"><button id="musicBtn">🔊</button></div>
-
-<script>
-// ==================== ГЕНЕРАЦИЯ ИКОНОК ====================
-function generateIcon(name, size = 45) {
-    const canvas = document.createElement('canvas');
-    canvas.width = size;
-    canvas.height = size;
-    const ctx = canvas.getContext('2d');
-    const hue = (name.charCodeAt(0) * 37 + name.length * 13) % 360;
-    const grad = ctx.createLinearGradient(0, 0, size, size);
-    grad.addColorStop(0, `hsl(${hue}, 70%, 55%)`);
-    grad.addColorStop(1, `hsl(${hue}, 80%, 35%)`);
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, size, size);
-    ctx.fillStyle = '#fff';
-    ctx.font = `bold ${size * 0.4}px system-ui`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(name.charAt(0).toUpperCase(), size/2, size/2);
-    return canvas.toDataURL();
-}
-
-// ==================== БОЙЦЫ ====================
-const brawlersList = [
-    "Shelly","Nita","Colt","Bull","Jessie","Brock","Dynamike","Bo","Tick","8-Bit",
-    "Emz","El Primo","Barley","Poco","Rosa","Rico","Darryl","Penny","Carl","Jacky",
-    "Gus","Bonnie","Janet","Fang","Eve","Otis","Sam","Mandy","Maisie","Cordelius",
-    "Willow","Doug","Hank","Pearl","Chuck","Mico","Larry","Angelo","Berry","Draco",
-    "Lily","Kenji","Moe","Juju","Shade","Meeple","Finx","Lola","Griff","Grom",
-    "Buzz","Ash","Meg","Surge","Colette","Amber","Lou","Byron","Squeak","Spike",
-    "Crow","Leon","Sandy","Gale","Nani","Belle","Stu","Ruffs","Edgar","Bea",
-    "Mr.P","Sprout","Max","Gene","Tara","Mortis","Piper","Pam","Frank","Bibi","Gray","Chester"
-];
-const brawlers = [...new Set(brawlersList)].slice(0, 101);
-
-let player = null;
-let selectedBrawler = "Shelly";
-let playerId = localStorage.getItem("player_id");
-if (!playerId) { playerId = "p_" + Date.now() + "_" + Math.random().toString(36).substr(2,6); localStorage.setItem("player_id", playerId); }
-
-function loadPlayer() {
-    let saved = localStorage.getItem("player_" + playerId);
-    if(saved) {
-        player = JSON.parse(saved);
-    } else {
-        player = {
-            id: playerId,
-            name: "BrawlerFan",
-            tag: "#" + Math.random().toString(36).substring(2,9).toUpperCase(),
-            trophies: 1200,
-            wins: 42,
-            coins: 1000,
-            gems: 50,
-            starDrops: 10,
-            favBrawler: "Shelly",
-            friends: [],
-            clan: "",
-            coolpassExp: 0,
-            coolpassLevel: 1
-        };
-    }
-    selectedBrawler = player.favBrawler || "Shelly";
-    savePlayer();
-}
-
-function savePlayer() {
-    localStorage.setItem("player_" + player.id, JSON.stringify(player));
-    updateLeaderboard();
-    updateUI();
-}
-
-function updateUI() {
-    document.getElementById("trophiesCount").innerText = player.trophies;
-    document.getElementById("winsCount").innerText = player.wins;
-    document.getElementById("coinsCount").innerText = player.coins;
-    document.getElementById("gemsCount").innerText = player.gems || 0;
-    document.getElementById("starDrops").innerText = player.starDrops;
-    document.getElementById("favBrawler").innerText = player.favBrawler;
-    document.getElementById("playerNameInput").value = player.name;
-    document.getElementById("playerTagDisplay").innerHTML = player.tag;
-    document.getElementById("myBrawler").innerHTML = selectedBrawler;
-    document.getElementById("friendsList").innerHTML = player.friends.length ? player.friends.map(f => `👤 ${f}`).join('') : "Нет друзей";
-    document.getElementById("clanDisplay").innerHTML = player.clan ? `🏰 ${player.clan}` : "Нет клана";
-    updateCoolpass();
-}
-
-function updateCoolpass() {
-    let level = player.coolpassLevel || 1;
-    let exp = player.coolpassExp || 0;
-    let need = level * 100;
-    let percent = (exp / need) * 100;
-    document.getElementById("coolpassLevel").innerHTML = `Ур.${level}`;
-    document.getElementById("coolpassFill").style.width = percent + "%";
-    document.getElementById("coolpassRewards").innerHTML = `🎁 До награды: ${need-exp} XP → +${100 + level*20} монет`;
-}
-
-function addExp(amount) {
-    player.coolpassExp = (player.coolpassExp || 0) + amount;
-    let need = player.coolpassLevel * 100;
-    while(player.coolpassExp >= need) {
-        player.coolpassExp -= need;
-        player.coolpassLevel++;
-        let reward = 100 + player.coolpassLevel * 20;
-        player.coins += reward;
-        showNotif(`🎉 COOLPASS УРОВЕНЬ ${player.coolpassLevel}! +${reward} монет!`);
-        need = player.coolpassLevel * 100;
-    }
-    savePlayer();
-}
-
-function updateLeaderboard() {
-    let players = [];
-    for(let i=0; i<localStorage.length; i++) {
-        let key = localStorage.key(i);
-        if(key && key.startsWith("player_")) {
-            try {
-                let p = JSON.parse(localStorage.getItem(key));
-                players.push({name: p.name, tag: p.tag, trophies: p.trophies});
-            } catch(e){}
-        }
-    }
-    players.sort((a,b)=>b.trophies - a.trophies);
-    players = players.slice(0,10);
-    let list = document.getElementById("leaderboardList");
-    if(players.length) {
-        list.innerHTML = players.map((p,i)=>`<li><span>${i+1}. ${p.name} ${p.tag}</span><span>🏆 ${p.trophies}</span></li>`).join('');
-    } else {
-        list.innerHTML = "<li>Нет данных</li>";
-    }
-    document.getElementById("onlineCount").innerText = Math.min(players.length + 1, 42);
-}
-
-function renderBrawlers() {
-    let container = document.getElementById("brawlersList");
-    container.innerHTML = "";
-    brawlers.forEach(b => {
-        let div = document.createElement("div");
-        div.className = "brawler-card" + (selectedBrawler === b ? " selected" : "");
-        let iconUrl = generateIcon(b, 45);
-        div.innerHTML = `<div class="brawler-icon"><img src="${iconUrl}" style="width:100%;height:100%;border-radius:50%;"></div><div class="brawler-name">${b.slice(0,10)}</div>`;
-        div.onclick = () => { selectedBrawler = b; renderBrawlers(); updateUI(); };
-        div.ondblclick = () => { player.favBrawler = b; savePlayer(); showNotif(`${b} любимый!`); updateUI(); };
-        container.appendChild(div);
-    });
-}
-
-function fight() {
-    let enemy = brawlers[Math.floor(Math.random() * brawlers.length)];
-    document.getElementById("enemyBrawler").innerHTML = enemy;
-    let win = Math.random() > 0.45;
-    let resultDiv = document.getElementById("fightResult");
-    if(win) {
-        let trophiesGain = 12 + Math.floor(Math.random() * 20);
-        let coinsGain = 40 + Math.floor(Math.random() * 60);
-        player.trophies += trophiesGain;
-        player.wins += 1;
-        player.coins += coinsGain;
-        addExp(25);
-        resultDiv.innerHTML = `🎉 ПОБЕДА! +${trophiesGain}🏆 +${coinsGain}💰 +25 XP!`;
-        playSound("win");
-    } else {
-        let lose = 7;
-        player.trophies = Math.max(0, player.trophies - lose);
-        addExp(10);
-        resultDiv.innerHTML = `💔 ПОРАЖЕНИЕ... -${lose}🏆 +10 XP`;
-        playSound("beep");
-    }
-    savePlayer();
-    updateUI();
-}
-
-function playSound(t) {
-    try {
-        let audio = new Audio();
-        audio.volume = 0.2;
-        if(t === "win") audio.src = "data:audio/wav;base64,U3RlYW0gV2luIFNvdW5k";
-        else audio.src = "data:audio/wav;base64,U3RlYW0gQmVlcA==";
-        audio.play().catch(e=>{});
-    } catch(e){}
-}
-
-function redeemCode() {
-    let code = document.getElementById("codeInput").value.trim().toUpperCase();
-    if(code === "COOLBOX") {
-        player.coins += 1000;
-        player.starDrops += 5;
-        showNotif("✅ COOLBOX: +1000 монет, +5 стардропов!");
-    } else if(code === "ORBSI2025") {
-        player.coins += 2000;
-        player.starDrops += 3;
-        player.gems = (player.gems || 0) + 50;
-        showNotif("✨ ORBSI2025: +2000 монет, +50 гемов!");
-    } else {
-        showNotif("❌ Неверный код! COOLBOX / ORBSI2025");
-        return;
-    }
-    savePlayer();
-    document.getElementById("codeInput").value = "";
-    updateUI();
-    playSound("win");
-}
-
-function saveProfile() {
-    let newName = document.getElementById("playerNameInput").value;
-    if(newName) player.name = newName;
-    savePlayer();
-    showNotif("Профиль сохранен!");
-}
-
-function addFriend() {
-    let fr = document.getElementById("friendInput").value.trim();
-    if(fr && !player.friends.includes(fr)) {
-        player.friends.push(fr);
-        savePlayer();
-        updateUI();
-        showNotif(`Друг ${fr} добавлен`);
-    }
-    document.getElementById("friendInput").value = "";
-}
-
-function setClan() {
-    let clan = document.getElementById("clanInput").value.trim();
-    if(clan) {
-        player.clan = clan;
-        savePlayer();
-        updateUI();
-        showNotif(`Клан ${clan} создан!`);
-    }
-    document.getElementById("clanInput").value = "";
-}
-
-function showNotif(msg) {
-    let n = document.createElement("div");
-    n.className = "notification";
-    n.innerText = msg;
-    document.body.appendChild(n);
-    setTimeout(() => n.remove(), 2000);
-}
-
-let promoEnd = Date.now() + 48*3600*1000;
-function updateTimer() {
-    let diff = promoEnd - Date.now();
-    if(diff <= 0) { document.getElementById("promoTimer").innerText = "Акция завершена!"; return; }
-    let h = Math.floor(diff/3600000);
-    let m = Math.floor((diff%3600000)/60000);
-    let s = Math.floor((diff%60000)/1000);
-    document.getElementById("promoTimer").innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-    setTimeout(updateTimer, 1000);
-}
-
-let musicEnabled = true;
-function toggleMusic() {
-    musicEnabled = !musicEnabled;
-    document.getElementById("musicBtn").innerHTML = musicEnabled ? "🔊" : "🔇";
-}
-
-loadPlayer();
-renderBrawlers();
-updateUI();
-updateTimer();
-
-document.getElementById("fightBtn").onclick = fight;
-document.getElementById("saveProfileBtn").onclick = saveProfile;
-document.getElementById("redeemBtn").onclick = redeemCode;
-document.getElementById("addFriendBtn").onclick = addFriend;
-document.getElementById("createClanBtn").onclick = setClan;
-document.getElementById("telegramBtn").onclick = () => window.open("https://t.me/coolboxcode", "_blank");
-document.getElementById("musicBtn").onclick = toggleMusic;
-setInterval(() => savePlayer(), 30000);
-</script>
+    <a href="admin.html" class="admin-link">⚙️ Admin</a>
+    <div class="audio-control"><button id="musicBtn">🔊</button></div>
+    
+    <script src="script.js"></script>
 </body>
 </html>
