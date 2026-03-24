@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#1a2a3a">
+    <title>Brawl Stars Simulator | CoolBox</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-icon">⚡</div>
+            <h1>COOLBOX<br><span>by orbsi</span></h1>
+            <div class="loader"><div class="loader-bar" id="loaderBar"></div></div>
+            <p class="loading-status" id="loadingStatus">Загрузка...</p>
+        </div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <div class="header">
+                <div class="logo"><h1>⚡ BRAWL SIM</h1><p>CoolBox by orbsi</p></div>
+                <div class="player-tag" id="playerTagDisplay">#LOADING</div>
+                <button class="telegram-btn" id="telegramBtn">📱 TG</button>
+            </div>
+            
+            <div class="promo">
+                <span>🎁 АКЦИЯ: 10 СТАРДРОПОВ 🎁</span>
+                <span id="promoTimer">47:59:59</span>
+            </div>
+            
+            <div class="online-status">🟢 Онлайн: <span id="onlineCount">0</span></div>
+            
+            <div class="dashboard">
+                <div class="card">
+                    <h3>🏆 ПРОФИЛЬ</h3>
+                    <input type="text" id="playerNameInput" placeholder="Имя">
+                    <div class="stats-grid">
+                        <div class="stat"><span>🏆</span><span id="trophiesCount">0</span></div>
+                        <div class="stat"><span>⭐</span><span id="winsCount">0</span></div>
+                        <div class="stat"><span>💰</span><span id="coinsCount">0</span></div>
+                        <div class="stat"><span>💎</span><span id="gemsCount">0</span></div>
+                        <div class="stat"><span>✨</span><span id="starDrops">0</span></div>
+                    </div>
+                    <div><span>🎖️ Любимый:</span> <span id="favBrawler">-</span></div>
+                    <button id="saveProfileBtn">💾 Сохранить</button>
+                    
+                    <div class="coolpass">
+                        <div class="coolpass-header"><span>⭐ COOLPASS</span><span id="coolpassLevel">Ур.1</span></div>
+                        <div class="coolpass-bar"><div class="coolpass-fill" id="coolpassFill"></div></div>
+                        <div id="coolpassRewards"></div>
+                    </div>
+                    
+                    <div class="codes">
+                        <h4>🎁 КОДЫ</h4>
+                        <input type="text" id="codeInput" placeholder="COOLBOX / ORBSI2025">
+                        <button id="redeemBtn">Активировать</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>⚔️ БОЙ</h3>
+                    <div class="fight-area">
+                        <div class="fighter"><span>🤺 Я</span><div id="myBrawler">-</div></div>
+                        <div class="vs">VS</div>
+                        <div class="fighter"><span>👾 Враг</span><div id="enemyBrawler">?</div></div>
+                    </div>
+                    <button class="fight-btn" id="fightBtn">💥 СРАЗИТЬСЯ</button>
+                    <div id="fightResult" class="fight-result"></div>
+                    <h3>📋 БОЙЦЫ (101)</h3>
+                    <div class="brawlers-grid" id="brawlersList"></div>
+                </div>
+                
+                <div class="card">
+                    <h3>🏅 ЛИДЕРЫ</h3>
+                    <ul class="leaderboard" id="leaderboardList"></ul>
+                    <div><h4>👥 ДРУЗЬЯ</h4><div id="friendsList">-</div>
+                    <div class="input-row"><input type="text" id="friendInput" placeholder="Тег"><button id="addFriendBtn">➕</button></div></div>
+                    <div><h4>🏰 КЛАН</h4><div id="clanDisplay">-</div>
+                    <div class="input-row"><input type="text" id="clanInput" placeholder="Название"><button id="createClanBtn">🏷️</button></div></div>
+                </div>
+            </div>
+            
+            <div class="footer">⚠️ Фанатский проект | CoolBox by orbsi</div>
+        </div>
+    </div>
+    
+    <div class="audio-control"><button id="musicBtn">🔊</button></div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
