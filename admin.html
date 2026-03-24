@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Admin Panel | CoolBox</title>
+    <link rel="stylesheet" href="admin-style.css">
+</head>
+<body>
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>⚙️ CoolBox Admin Panel</h1>
+        <button id="logoutBtn" class="btn-danger">🚪 Выйти</button>
+    </div>
+    
+    <div class="admin-card">
+        <h2>🖥️ Статус сервера</h2>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-value" id="onlineCount">0</div><div>онлайн</div></div>
+            <div class="stat-card"><div class="stat-value" id="totalPlayers">0</div><div>всего игроков</div></div>
+            <div class="stat-card"><div class="stat-value" id="uptime">0ч</div><div>время работы</div></div>
+        </div>
+        <div class="button-group">
+            <button id="restartBtn" class="btn-warning">🔄 Перезапустить</button>
+            <button id="clearCacheBtn" class="btn-secondary">🗑️ Очистить кэш</button>
+        </div>
+    </div>
+    
+    <div class="admin-card">
+        <h2>🔍 Поиск игрока по тегу</h2>
+        <input type="text" id="searchTag" placeholder="#A1B23CD4" maxlength="9">
+        <button id="searchBtn" class="btn-primary">Найти</button>
+        <div id="searchResult" class="search-result"></div>
+    </div>
+    
+    <div class="admin-card">
+        <h2>💰 Выдать ресурсы</h2>
+        <input type="text" id="giveTag" placeholder="Тег игрока (#A1B23CD4)">
+        <div class="form-row">
+            <input type="number" id="giveCoins" placeholder="💰 Монеты">
+            <input type="number" id="giveGems" placeholder="💎 Гемы">
+            <input type="number" id="giveStarDrops" placeholder="✨ Стардропы">
+            <input type="number" id="giveTrophies" placeholder="🏆 Трофеи">
+        </div>
+        <button id="giveResourcesBtn" class="btn-success">💎 Выдать ресурсы</button>
+    </div>
+    
+    <div class="admin-card">
+        <h2>🎭 Выдать бойца</h2>
+        <input type="text" id="brawlerTag" placeholder="Тег игрока">
+        <select id="selectBrawler"></select>
+        <button id="giveBrawlerBtn" class="btn-success">🎭 Выдать бойца</button>
+    </div>
+    
+    <div class="admin-card">
+        <h2>👑 Контент креатора</h2>
+        <input type="text" id="creatorTag" placeholder="Тег игрока">
+        <div class="checkbox-group">
+            <label><input type="checkbox" id="creatorBadge"> 🏆 Знак креатора</label>
+            <label><input type="checkbox" id="vipBadge"> 💎 VIP статус</label>
+            <label><input type="checkbox" id="legendaryBrawler"> ⭐ Легендарный боец</label>
+        </div>
+        <select id="creatorBonus">
+            <option value="5000">5000 монет</option>
+            <option value="10000">10000 монет</option>
+            <option value="20000">20000 монет + 50 гемов</option>
+            <option value="50000">50000 монет + 100 гемов</option>
+        </select>
+        <button id="giveCreatorBtn" class="btn-royal">👑 Выдать контент креатора</button>
+    </div>
+    
+    <div class="admin-card">
+        <h2>📋 Все игроки</h2>
+        <input type="text" id="filterPlayers" placeholder="Фильтр по имени или тегу">
+        <div class="players-list" id="playersList"></div>
+    </div>
+    
+    <div class="admin-card">
+        <h2>📢 Глобальное сообщение</h2>
+        <input type="text" id="globalMessage" placeholder="Сообщение для всех игроков">
+        <button id="sendMessageBtn" class="btn-primary">📢 Отправить</button>
+    </div>
+</div>
+
+<a href="index.html" class="back-btn">← В игру</a>
+
+<script src="admin.js"></script>
+</body>
+</html>
